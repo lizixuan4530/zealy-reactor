@@ -1,98 +1,82 @@
 import { Close, Reply } from "@mui/icons-material";
-import {
-  Avatar,
-  Box,
-  IconButton,
-  Paper,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Avatar, IconButton, Paper, Stack, Typography } from "@mui/material";
 import TextField from "@mui/material/TextField";
-import { brown, deepOrange, grey } from "@mui/material/colors";
-import EmojiPicker from "./EmojiPicker";
+import { brown, deepOrange } from "@mui/material/colors";
+import { FunctionComponent, useState } from "react";
+import { Message } from "./Message";
 
-export default function InputCard() {
-  const existingMessageExample = (
-    <>
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="flex-start"
-        marginBottom="6px"
-      >
-        <Avatar sx={{ bgcolor: deepOrange[500], width: 24, height: 24 }}>
-          <Typography variant="button">N</Typography>
-        </Avatar>
-        <Typography marginLeft="6px" variant="subtitle2">
-          Nancy Truman
-        </Typography>
-        <Typography marginLeft="12px" variant="body2" color={grey[500]}>
-          1 hour ago
-        </Typography>
-      </Stack>
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="flex-start"
-        marginBottom="6px"
-      >
-        <Box
-          textAlign="left"
-          marginBottom="12px"
-          paddingY="6px"
-          marginRight="12px"
-          sx={{
-            borderRadius: "12px",
-            backgroundColor: grey[100],
-          }}
-        >
-          <Typography marginLeft="12px" variant="body2">
-            I'm a comment
-          </Typography>
-        </Box>
-        <EmojiPicker />
-      </Stack>
-    </>
-  );
+export const InputCard: FunctionComponent<{ onClose: () => void }> = ({
+  onClose,
+}) => {
+  const [inputText, setInputText] = useState("");
+  const [isReplied, setIsReplied] = useState(false);
+
+  const handleInputChange = (e: { target: { value: string } }) => {
+    setInputText(e.target.value);
+  };
+
+  const handleOnClick = () => {
+    setIsReplied(true);
+  };
 
   return (
     <Paper sx={{ width: "300px", paddingLeft: "12px", paddingBottom: "12px" }}>
       <Stack flexDirection="row" justifyContent="flex-end">
-        <IconButton size="small">
+        <IconButton size="small" onClick={onClose}>
           <Close fontSize="inherit" />
         </IconButton>
       </Stack>
-      {existingMessageExample}
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="flex-start"
-        marginBottom="6px"
-      >
-        <Avatar sx={{ bgcolor: brown[500], width: 24, height: 24 }}>
-          <Typography variant="button">L</Typography>
-        </Avatar>
-        <Typography marginLeft="6px" variant="subtitle2">
-          Lily Collins
-        </Typography>
-      </Stack>
-      <Stack
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="flex-start"
-        marginBottom="6px"
-      >
-        <TextField
-          multiline
-          label="Reply"
-          variant="filled"
-          color="secondary"
-          fullWidth
-        />
-        <IconButton size="small">
-          <Reply fontSize="inherit" />
-        </IconButton>
-      </Stack>
+      <Message
+        userName="Nancy Truman"
+        time="1 hour ago"
+        message="I'm a comment"
+        color={deepOrange[500]}
+      ></Message>
+      {isReplied ? (
+        <Message
+          userName="Lily Collins"
+          time="Just now"
+          message={inputText}
+          color={brown[500]}
+        ></Message>
+      ) : null}
+
+      {isReplied ? null : (
+        <>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="flex-start"
+            marginBottom="6px"
+          >
+            <Avatar sx={{ bgcolor: brown[500], width: 24, height: 24 }}>
+              <Typography variant="button">L</Typography>
+            </Avatar>
+            <Typography marginLeft="6px" variant="subtitle2">
+              Lily Collins
+            </Typography>
+          </Stack>
+          <Stack
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="flex-start"
+            marginBottom="6px"
+          >
+            <TextField
+              multiline
+              label="Reply"
+              variant="filled"
+              color="secondary"
+              fullWidth
+              value={inputText}
+              onChange={handleInputChange}
+            />
+            <IconButton size="small" onClick={handleOnClick}>
+              <Reply fontSize="inherit" />
+            </IconButton>
+          </Stack>
+        </>
+      )}
     </Paper>
   );
-}
+};
