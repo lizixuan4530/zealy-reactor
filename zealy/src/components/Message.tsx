@@ -1,6 +1,8 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import { FunctionComponent } from "react";
+import { EmojiPicker } from "./EmojiPicker";
+import { useEmojiPicker } from "./useEmojiPicker";
 
 type MessageInput = {
   userName: string;
@@ -11,6 +13,13 @@ type MessageInput = {
 export const Message: FunctionComponent<MessageInput> = (
   input: MessageInput
 ) => {
+  const {
+    anchorEl,
+    handleEmojiClick,
+    handleClick,
+    handleClose,
+    selectedEmoji,
+  } = useEmojiPicker();
   return (
     <>
       <Stack
@@ -34,24 +43,33 @@ export const Message: FunctionComponent<MessageInput> = (
       <Stack
         flexDirection="row"
         alignItems="center"
-        justifyContent="flex-start"
-        marginBottom="6px"
+        justifyContent="center"
+        marginBottom="18px"
       >
         <Box
           textAlign="left"
-          marginBottom="12px"
-          paddingY="6px"
-          marginRight="12px"
           sx={{
-            borderRadius: "12px",
-            backgroundColor: grey[100],
             width: 1,
           }}
         >
-          <Typography marginLeft="12px" variant="body2">
-            {input.message}
-          </Typography>
+          <Box
+            textAlign="left"
+            paddingY="6px"
+            sx={{
+              borderRadius: "12px",
+              backgroundColor: grey[100],
+              width: 1,
+            }}
+          >
+            <Typography marginLeft="12px" variant="body2">
+              {input.message}
+            </Typography>
+          </Box>
+          <Box marginLeft="12px">{selectedEmoji}</Box>
         </Box>
+        <EmojiPicker
+          input={{ anchorEl, handleEmojiClick, handleClick, handleClose }}
+        ></EmojiPicker>
       </Stack>
     </>
   );
